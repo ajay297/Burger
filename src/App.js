@@ -25,13 +25,16 @@ class App extends Component {
       ]
     });
   }
-  nameChangedHandler=(event)=>{
+  nameChangedHandler = (event) => {
     this.setState({
-      persons:[
+      persons: [
         { name: 'Ajay', age: 20 },
         { name: event.target.value, age: 21 },
         { name: 'Jay', age: 20 }
-      ]
+      ],
+      otherState: 'some other value',
+      showPersons: false
+
     })
   }
   // in normal js=onclick on the other hand react=onClick
@@ -43,33 +46,48 @@ class App extends Component {
   // this.switchNameHandler.bind(this,arguments);
   // or
   // ()=>this.switchNameHandler()
+  togglePersonsHandler = () => {
+    const doesShow=this.state.showPersons;
+    this.setState({showPersons:!doesShow});
+
+  }
   render() {
-    const style={
-      backgroundColor:'white',
+    const style = {
+      backgroundColor: 'white',
       font: 'inherit',
-      border: '1px solid blue', 
+      border: '1px solid blue',
       padding: '8px',
       cursor: 'pointer',
     };
+    let persons=null;
+    if (this.state.showPersons){
+      persons=(
+        <div>
+            <Person
+              name={this.state.persons[0].name}
+              age={this.state.persons[0].age} />
+            <Person
+              name={this.state.persons[1].name}
+              age={this.state.persons[1].age}
+              click={this.switchNameHandler.bind(this, "zero")}
+              changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
+            <Person
+              name={this.state.persons[2].name}
+              age={this.state.persons[2].age} />
+          </div>
+
+      )
+    }
     return (
       <div className="App">
         <h1>Hi, I'm react App</h1>
         <p>This is really working</p>
-        {/* Don't use () in onClick otherwise react will just call the function as it render it we only need to pass the function name that is only by reference*/}
-        <button 
-        style={style}
-        onClick={() => this.switchNameHandler('hero')}>Switch Name</button>
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age} />
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          click={this.switchNameHandler.bind(this, "zero")}
-          changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age} />
+        {/* Don't use () in onClick otherwise react will just call the function as it render it we only need to pass the function name that is only by reference
+        if is not used here,use tertnary condition*/}
+        <button
+          style={style}
+          onClick={this.togglePersonsHandler}>Toggle Persons</button>
+          {persons}
       </div>
     );
     // Props are set and passed from outside into a particular component
