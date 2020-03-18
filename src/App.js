@@ -4,9 +4,9 @@ import Person from './Person/Person';
 class App extends Component {
   state = {
     persons: [
-      { name: 'Max', age: 28 },
-      { name: 'Manu', age: 29 },
-      { name: 'Manu', age: 29 }
+      { id:'akjn',name: 'Max', age: 28 },
+      { id:'ajsns',name: 'Manu', age: 29 },
+      { id:'nnqqsk',name: 'Manu', age: 29 }
     ]
   }
   switchNameHandler = (newName) => {
@@ -25,17 +25,17 @@ class App extends Component {
       ]
     });
   }
-  nameChangedHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: 'Ajay', age: 20 },
-        { name: event.target.value, age: 21 },
-        { name: 'Jay', age: 20 }
-      ],
-      otherState: 'some other value',
-      showPersons: false
-
-    })
+  nameChangedHandler = (event,id) => {
+    const personsIndex=this.state.persons.findIndex(p=>{
+      return p.id===id;
+    });
+    // const personsIndex=index;
+    // const person=Object.assign({},this.state.persons[personsIndex]);
+    const person={...this.state.persons[personsIndex]};
+    person.name=event.target.value;
+    const persons=[...this.state.persons];
+    persons[personsIndex]=person;
+    this.setState({persons: persons});
   }
   // in normal js=onclick on the other hand react=onClick
   // state is a special property
@@ -47,8 +47,19 @@ class App extends Component {
   // or
   // ()=>this.switchNameHandler()
   togglePersonsHandler = () => {
-    const doesShow=this.state.showPersons;
-    this.setState({showPersons:!doesShow});
+    const doesShow = this.state.showPersons;
+    this.setState({ showPersons: !doesShow });
+
+  }
+  deletePersonHandler=(personIndex)=>{
+    // const persons=this.state.persons;
+    // persons.splice(personIndex,1);
+    // this.setState({persons:persons}); //this a flaw
+    // Alternative
+    // const persons=this.state.persons.slice();
+    const persons=[...this.state.persons];
+    persons.splice(personIndex,1);
+    this.setState({persons:persons});
 
   }
   render() {
@@ -59,22 +70,32 @@ class App extends Component {
       padding: '8px',
       cursor: 'pointer',
     };
-    let persons=null;
-    if (this.state.showPersons){
-      persons=(
+    let persons = null;
+    if (this.state.showPersons) {
+      persons = (
         <div>
-            <Person
-              name={this.state.persons[0].name}
-              age={this.state.persons[0].age} />
-            <Person
-              name={this.state.persons[1].name}
-              age={this.state.persons[1].age}
-              click={this.switchNameHandler.bind(this, "zero")}
-              changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
-            <Person
-              name={this.state.persons[2].name}
-              age={this.state.persons[2].age} />
-          </div>
+          {this.state.persons.map((person,index) => {
+            return <Person
+              click={()=>this.deletePersonHandler(index)} 
+              name={person.name}
+              age={person.age} 
+              key={person.id}
+              changed={(event)=>this.nameChangedHandler(event,person.id)}/>
+
+          })}
+          {/* We should assign a key property to allow react to keep track of the individual elements so that it can compare between the different elements to find out which elements changed and which didn't so that it only re-renders the elements which did change and not the whole list. React compares with the future and the past*/}
+          {/* <Person
+            name={this.state.persons[0].name}
+            age={this.state.persons[0].age} />
+          <Person
+            name={this.state.persons[1].name}
+            age={this.state.persons[1].age}
+            click={this.switchNameHandler.bind(this, "zero")}
+            changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
+          <Person
+            name={this.state.persons[2].name}
+            age={this.state.persons[2].age} /> */}
+        </div>
 
       )
     }
@@ -87,7 +108,7 @@ class App extends Component {
         <button
           style={style}
           onClick={this.togglePersonsHandler}>Toggle Persons</button>
-          {persons}
+        {persons}
       </div>
     );
     // Props are set and passed from outside into a particular component
