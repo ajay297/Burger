@@ -20,8 +20,8 @@ class App extends Component {
     this.setState({
       persons: [
         { name: newName, age: 20 },
-        { name: 'Vijay', age: 21 },
-        { name: 'Jay', age: 20 }
+        { name: 'AJay', age: 21 },
+        { name: 'Vijay', age: 20 }
       ]
     });
   }
@@ -48,7 +48,7 @@ class App extends Component {
   // ()=>this.switchNameHandler()
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
-    this.setState({ showPersons: !doesShow });
+    this.setState({ showPersons: (doesShow = !doesShow) });
 
   }
   deletePersonHandler=(personIndex)=>{
@@ -94,7 +94,10 @@ class App extends Component {
             changed={this.nameChangedHandler}>My Hobbies: Racing</Person>
           <Person
             name={this.state.persons[2].name}
-            age={this.state.persons[2].age} /> */}
+            age={this.state.persons[2].age} /> 
+            gender={this.state.persons[2].gender}
+            
+            */}
         </div>
 
       )
